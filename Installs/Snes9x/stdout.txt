@@ -1,0 +1,6 @@
+Reading config file E:\Emulators Folder\Installs\Snes9x\snes9x.conf.
+Saving	config file	E:\Emulators Folder\Installs\Snes9x\snes9x.conf
+No ROM file header found.
+Map_HiROMMap
+"EARTH BOUND" [checksum ok] HiROM, 32Mbits, ROM+RAM+BAT, NTSC, SRAM:64Kbits, ID:MB  , CRC32:DC9BB451
+Saving	config file	E:\Emulators Folder\Installs\Snes9x\snes9x.conf

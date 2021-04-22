@@ -1,0 +1,369 @@
+PCSX2 1.7.0-20210413020518 - compiled on Apr 13 2021
+Savestate version: 0x9a1e0000
+
+Host Machine Init:
+	Operating System =  Microsoft Windows 10 Home (build 19042), 64-bit
+	Physical RAM     =  16343 MB
+	CPU name         =  Intel(R) Core(TM) i5-3570K CPU @ 3.40GHz
+	Vendor/Model     =  GenuineIntel (stepping 09)
+	CPU speed        =  3.404 ghz (4 logical threads)
+	x86PType         =  Standard OEM
+	x86Flags         =  bfcbfbff fe9ae383
+	x86EFlags        =  28100800
+
+x86 Features Detected:
+	SSE2.. SSE3.. SSSE3.. SSE4.1.. SSE4.2.. AVX
+
+Reserving memory for recompilers...
+
+Loading plugins from E:\Emulators Folder\Installs\PS2\pcsx2_v1.6\PCSX2 1.6.0\Plugins...
+	Bound   GS: GSdx32-SSE4.dll [GSdx 20200506140834 (MSVC 19.25 SSE4.1/AVX) 1.2.0]
+Plugins loaded successfully.
+
+HLE Notice: ELF does not have a path.
+
+Initializing plugins...
+	Init GS
+Plugins initialized successfully.
+
+[GameDB] 10363 games on record (loaded in 415ms)
+Patches: No CRC found, using 00000000 instead.
+isoFile open ok: E:\Emulators Folder\EmulatorGames\PS2Games\SSX On Tour (USA).iso
+	Image type  = DVD
+ * CDVD Disk Open: DVD, Single layer or unknown:
+ * * Track 1: Data (Mode 1) (2294112 sectors)
+Opening plugins...
+	Opening GS
+Failed to init the freetype face
+Current Renderer: Direct3D 11 (Hardware renderer)
+GSdx Lookup CRC:0
+McdSlot 0 [File]: E:\Emulators Folder\Installs\PS2\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\memcards\Mcd001.ps2
+McdSlot 1 [File]: E:\Emulators Folder\Installs\PS2\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\memcards\Mcd002.ps2
+Plugins opened successfully.
+48000 SampleRate: 
+EE/iR5900-32 Recompiler Reset
+	Bios Found: USA     v02.00(14/06/2004)  Console
+	BIOS rom1 module not found, skipping...
+	BIOS rom2 module not found, skipping...
+	BIOS erom module not found, skipping...
+# Initialize memory (rev:3.70, ctm:196Mhz, cpuclk:147Mhz detected)
+Frame buffer size set to  512x512 (1536x1536)
+
+PlayStation 2 ======== Hard reset boot
+ ROMGEN=2004-0614, IOP info (CPUID=1f, CACH_CONFIG=0, 2MB, IOP mode)
+ <20040614-100909,ROMconf,PS20200AC20040614.bin:11696>
+# Total accessable memory size: 32 MB (B:2:8:0) (370:2:7c30)
+# TLB spad=0 kernel=1:12 default=13:30 extended=31:38
+# Initialize Start.
+# Initialize GS ...
+# Initialize INTC ...
+# Initialize TIMER ...
+# Initialize DMAC ...
+# Initialize VU1 ...
+# Initialize VIF1 ...
+# Initialize GIF ...
+# Initialize VU0 ...
+# Initialize VIF0 ...
+# Initialize IPU ...
+# Initialize FPU ...
+# Initialize User Memory ...
+# Initialize Scratch Pad ...
+# Initialize Done.
+
+EE DECI2 Manager version 0.06 Feb  6 2003 08:38:48
+  CPUID=2e20, BoardID=0, ROMGEN=2004-0614, 32M
+
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
+(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Disc region type = NTSC
+ELF (cdrom0:\SLUS_212.78;1) Game CRC = 0x0F27ED9B, EntryPoint = 0x00100008
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
+(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Disc region type = NTSC
+
+IOP Realtime Kernel Ver.0.9.1
+    Copyright 1999 (C) Sony Computer Entertainment Inc. 
+Reboot service module.(99/11/10)
+cdvd driver module version 0.1.1 (C)SCEI
+Load File service.(99/11/05)
+Multi Threaded Fileio module.(99/11/15) 
+iop heap service (99/11/03)
+loadelf: fname rom0:OSDSYS secname all
+loadelf version 3.30
+Input ELF format filename = rom0:OSDSYS
+0 00100000 000586dc ......
+Loaded, rom0:OSDSYS
+start address 0x100008
+gp address 00000000
+# Restart Without Memory Clear.
+# Initialize GS ...
+# Initialize INTC ...
+# Initialize TIMER ...
+# Initialize DMAC ...
+# Initialize VU1 ...
+# Initialize VIF1 ...
+# Initialize GIF ...
+# Initialize VU0 ...
+# Initialize VIF0 ...
+# Initialize IPU ...
+# Initialize FPU ...
+# Initialize Scratch Pad ...
+# Restart Without Memory Clear Done.
+# Restart Without Memory Clear.
+# Initialize GS ...
+# Initialize INTC ...
+# Initialize TIMER ...
+# Initialize DMAC ...
+# Initialize VU1 ...
+# Initialize VIF1 ...
+# Initialize GIF ...
+# Initialize VU0 ...
+# Initialize VIF0 ...
+# Initialize IPU ...
+# Initialize FPU ...
+# Initialize Scratch Pad ...
+# Restart Without Memory Clear Done.
+Get Reboot Request From EE
+ROM directory not found
+
+PlayStation 2 ======== Update rebooting..
+ROM directory not found
+
+PlayStation 2 ======== Update reboot complete
+cdvdman Init
+rmreset start
+rmreset end
+clearspu: completed
+Pad Driver for OSD (2000/12/05 18:05) 392, 128
+
+IOP Realtime Kernel Ver.0.9.1
+    Copyright 1999 (C) Sony Computer Entertainment Inc. 
+Reboot service module.(99/11/10)
+cdvd driver module version 0.1.1 (C)SCEI
+Load File service.(99/11/05)
+Multi Threaded Fileio module.(99/11/15) 
+iop heap service (99/11/03)
+read/write allocate memory 4000
+open name rom0:OSDVER flag 1 data 4a978
+open fd = 2
+open name rom0:ROMVER flag 1 data 4a978
+open fd = 2
+open name rom0:XDEV9 flag 1 data 4a978
+open fd = 2
+loadmodule: fname rom0:XDEV9 args 0 arg 
+dev9: unknown dev9 hardware.
+loadmodule: id 32, ret 1
+loadmodule: fname rom0:XDEV9SERV args 0 arg 
+loadmodule: id -200, ret 1
+open name rom0:FONTM flag 1 data 4a978
+open fd = 2
+open name rom0:FNTIMAGE flag 1 data 4a978
+open fd = 2
+open name rom0:SNDIMAGE flag 1 data 4a978
+open fd = 2
+open name rom0:TEXIMAGE flag 1 data 4a978
+open fd = 2
+open name rom0:ICOIMAGE flag 1 data 4a978
+open fd = 2
+open name rom0:TZLIST flag 1 data 4a978
+open fd = 2
+_spu_rev_offsetaddr 1f9021
+### addr = 1034255  size = 28640
+_spu_rev_offsetaddr 1d9021
+### addr = 968719  size = 28640
+open name rom0:ROMVER flag 1 data 4a978
+open fd = 2
+get val add 3c0 type 2 ret 1ff000
+get val add 1ff000 type 2 ret 0
+open name rom0:PS1ID flag 1 data 4a978
+open fd = 2
+open name rom0:PS1VERA flag 1 data 4a978
+open fd = 2
+open name rom1:DVDID flag 1 data 4a978
+open fd = -6
+(UpdateVSyncRate) Mode Changed to DVD NTSC.
+(UpdateVSyncRate) FPS Limit Changed : 59.93 fps
+Frame buffer size set to  640x512 (1920x1536)
+ExecutePs2GameDisk
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
+(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Disc region type = NTSC
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
+(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Disc region type = NTSC
+open name cdrom0:¥SYSTEM.CNF;1 flag 4 data 4a978
+open fd = 2
+# Restart.
+# Initialize GS ...
+# Initialize INTC ...
+# Initialize TIMER ...
+# Initialize DMAC ...
+# Initialize VU1 ...
+# Initialize VIF1 ...
+# Initialize GIF ...
+# Initialize VU0 ...
+# Initialize VIF0 ...
+# Initialize IPU ...
+# Initialize FPU ...
+# Initialize User Memory ...
+# Initialize Scratch Pad ...
+# Restart Done.
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
+(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Disc region type = NTSC
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
+(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Disc region type = NTSC
+Get Reboot Request From EE
+ROM directory not found
+
+PlayStation 2 ======== Update rebooting..
+
+PlayStation 2 ======== Update reboot complete
+cdvdman Init
+
+IOP Realtime Kernel Ver.0.9.1
+    Copyright 1999 (C) Sony Computer Entertainment Inc. 
+Reboot service module.(99/11/10)
+cdvd driver module version 0.1.1 (C)SCEI
+Load File service.(99/11/05)
+Multi Threaded Fileio module.(99/11/15) 
+iop heap service (99/11/03)
+loadelf: fname rom0:PS2LOGO secname all
+loadelf version 3.30
+Input ELF format filename = rom0:PS2LOGO
+0 01000000 00019bf0 ..
+Loaded, rom0:PS2LOGO
+start address 0x1000008
+gp address 00000000
+# Restart Without Memory Clear.
+# Initialize GS ...
+# Initialize INTC ...
+# Initialize TIMER ...
+# Initialize DMAC ...
+# Initialize VU1 ...
+# Initialize VIF1 ...
+# Initialize GIF ...
+# Initialize VU0 ...
+# Initialize VIF0 ...
+# Initialize IPU ...
+# Initialize FPU ...
+# Initialize Scratch Pad ...
+# Restart Without Memory Clear Done.
+# Restart Without Memory Clear.
+# Initialize GS ...
+# Initialize INTC ...
+# Initialize TIMER ...
+# Initialize DMAC ...
+# Initialize VU1 ...
+# Initialize VIF1 ...
+# Initialize GIF ...
+# Initialize VU0 ...
+# Initialize VIF0 ...
+# Initialize IPU ...
+# Initialize FPU ...
+# Initialize Scratch Pad ...
+# Restart Without Memory Clear Done.
+read/write allocate memory 4000
+open name rom0:ROMVER flag 1 data 44078
+open fd = 2
+loadmodule: fname rom0:OSDSND args 0 arg 
+loadmodule: id 25, ret 0
+_spu_rev_offsetaddr 1dfff1
+### addr = 2097120  size = 32
+_spu_rev_offsetaddr 1f9021
+### addr = 1034255  size = 28640
+(UpdateVSyncRate) Mode Changed to NTSC.
+# Restart.
+# Initialize GS ...
+# Initialize INTC ...
+# Initialize TIMER ...
+# Initialize DMAC ...
+# Initialize VU1 ...
+# Initialize VIF1 ...
+# Initialize GIF ...
+# Initialize VU0 ...
+# Initialize VIF0 ...
+# Initialize IPU ...
+# Initialize FPU ...
+# Initialize User Memory ...
+# Initialize Scratch Pad ...
+# Restart Done.
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
+(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Disc region type = NTSC
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
+(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Disc region type = NTSC
+Get Reboot Request From EE
+ROM directory not found
+
+PlayStation 2 ======== Update rebooting..
+
+PlayStation 2 ======== Update reboot complete
+cdvdman Init
+
+IOP Realtime Kernel Ver.0.9.1
+    Copyright 1999 (C) Sony Computer Entertainment Inc. 
+Reboot service module.(99/11/10)
+cdvd driver module version 0.1.1 (C)SCEI
+Load File service.(99/11/05)
+Multi Threaded Fileio module.(99/11/15) 
+iop heap service (99/11/03)
+loadelf: fname cdrom0:¥SLUS_212.78;1 secname all
+loadelf version 3.30
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
+(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Disc region type = NTSC
+Input ELF format filename = cdrom0:¥SLUS_212.78;1
+0 00100000 00432f94 ....................................................................
+Loaded, cdrom0:¥SLUS_212.78;1
+start address 0x100008
+gp address 00000000
+# Restart Without Memory Clear.
+# Initialize GS ...
+# Initialize INTC ...
+# Initialize TIMER ...
+# Initialize DMAC ...
+# Initialize VU1 ...
+# Initialize VIF1 ...
+# Initialize GIF ...
+# Initialize VU0 ...
+# Initialize VIF0 ...
+# Initialize IPU ...
+# Initialize FPU ...
+# Initialize Scratch Pad ...
+# Restart Without Memory Clear Done.
+Elf entry point @ 0x00100008 about to get recompiled. Load patches first.
+[GameDB] Searching for 'slus-21278' in GameDB
+[GameDB] Found 'slus-21278' in GameDB
+[GameDB] Searching for patch with CRC '0f27ed9b'
+[GameDB] No CRC-specific patch or default patch found
+Overall 0 Widescreen hacks loaded
+(Wide Screen Cheats DB) Patches Loaded: 0
+[GameDB] Searching for 'slus-21278' in GameDB
+[GameDB] Found 'slus-21278' in GameDB
+[GameDB] Searching for patch with CRC '0f27ed9b'
+[GameDB] No CRC-specific patch or default patch found
+GSdx Lookup CRC:F27ED9B
+Get Reboot Request From EE
+ROM directory not found
+
+PlayStation 2 ======== Update rebooting..
+
+PlayStation 2 ======== Update reboot complete
+cdvdman Init
+
+IOP Realtime Kernel Ver. 2.2
+    Copyright 1999-2002 (C) Sony Computer Entertainment Inc. 
+Reboot service module.(99/11/10)
+cdvd driver module version 0.1.1 (C)SCEI
+Load File service.(99/11/05)
+Multi Threaded Fileio module.(99/11/15) 
+iop heap service (99/11/03)
+Closing plugins...
+	Closing GS
+Plugins closed successfully.
+Shutting down plugins...
+Plugins shutdown successfully.
+(GameDB) Unloading...

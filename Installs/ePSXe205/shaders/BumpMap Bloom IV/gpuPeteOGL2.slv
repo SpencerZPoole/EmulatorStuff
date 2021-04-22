@@ -1,0 +1,25 @@
+// Bump Map | Gloss | Bloom
+// Version IV
+// by Zodav
+
+uniform vec4 OGL2Param;
+uniform vec4 OGL2InvSize;
+vec4 offset;
+
+void main()
+
+{
+
+offset = vec4( OGL2InvSize.x, OGL2InvSize.y, OGL2InvSize.x*-1.0, OGL2InvSize.y*-1.0);
+gl_Position = ftransform();
+gl_TexCoord[0] = gl_MultiTexCoord0;
+gl_TexCoord[1].xy = gl_TexCoord[0].xy + vec2(0.0, offset.w);
+gl_TexCoord[2].xy = gl_TexCoord[0].xy + vec2(offset.z, 0.0);
+gl_TexCoord[3].xy = gl_TexCoord[0].xy + vec2(offset.x, 0.0);
+gl_TexCoord[4].xy = gl_TexCoord[0].xy + vec2(0.0, offset.y);
+gl_TexCoord[1].zw = gl_TexCoord[1].xy + vec2(0.0, offset.w*2.0);
+gl_TexCoord[2].zw = gl_TexCoord[2].xy + vec2(offset.z*2.0, 0.0);
+gl_TexCoord[3].zw = gl_TexCoord[3].xy + vec2(offset.x*2.0, 0.0);
+gl_TexCoord[4].zw = gl_TexCoord[4].xy + vec2(0.0, offset.y*2.0);
+
+}

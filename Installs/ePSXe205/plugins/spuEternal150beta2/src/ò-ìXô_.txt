@@ -1,0 +1,1044 @@
+--------------------------------------------------------------------------
+Eternal 1.50 beta 1 ->Eternal 1.50 beta 2 (2005/08/21)
+
+・新リバーブを実装。独田地獄斎氏の解析結果を参考に新規実装。(05.06.26) by Yano
+
+・新リバーブのLPFの使い方を修正。(05.06.28) by Yano
+  LPFを壁の反射係数の周波数特性の模擬に使うようにした。独田地獄斎氏は単に入力のFIRと共用してLPF(IIR)が使われていると考えているようだが、プリセットのパラメータでは殆ど聴感上の効果は得られない。また、Neill Corlett氏は初期反射の中で用いているが、使い方が間違っているため残響において実機との相違を生んでしまっている。
+
+・新リバーブの初期反射(Wall Reflection)の左右の扱いを修正。(05.06.29) by Yano
+  初期反射の左右の扱いについてプリセットのEcho等のパラメータ設定を見ると独田地獄斎氏の結果は間違っていそう(Corlett氏が正しそう)なので、修正した。
+
+・新リバーブの出力部をFIRで補間(22k->44k)するようにした。(05.06.29) by Yano
+
+・新リバーブのLPFの挿入位置を変更。(05.07.04) by Yano
+
+・Reverb off時はWork Areaへの書き込みを停止した。(05.07.04) by Yano
+
+・Neill's に "+1sample"を入れ忘れたバグを修正 (05.07.07) by T.Yano
+  Neill Corlett氏の解析結果に基づくリバーブ("Neill's")を実装したときに、書き込みにおいて"+1sample"の位置にしていなかったバグを修正した。
+
+・新リバーブにおいて、左、右を1サンプル毎交互に処理するように修正 05.07.07 by T.Yano
+  実機調査の結果、同一のオフセットに対する書き込みにおいて、まず、左サンプルを処理し、次のサンプルで右を処理することが判明したので、修正した。
+
+・新リバーブのComb Filter内LPFの1sample delayをSPUメモリを使うように修正 05.07.07 by T.Yano
+  実機調査の結果、SPUメモリの読み出しで実現していることが判明したので、修正した。
+
+・Noiseの乱数発生アルゴリズムを32次M系列(32,22,2,1)から16次M系列(16,13,12,11)に変更した。 05.07.09 by T.Yano
+  実機調査の結果、Noise発生多項式が判明したので、修正した。ついでにBit Reverseアルゴリズムをbit数の対数時間で処理できるものに変更。
+
+・Noise発音中はEnvelope.stop()を保留するようにした。 05.07.10 by T.Yano
+  Noise調査中に、Noise発音中は裏で動いているVAGデコードのflag 1,5のEnvelope.stop()が保留され、NoiseModeが解除された後に実行されることが判明したので、修正した。
+
+・Tales of Destiny, Valkyrie Profileで起こっていたSPU-IRQが期待通り発生しない問題にて、
+  「SPU IRQ - Force interruption flag7」で解消していたのを、Voice::processVagHeader()で
+  Flag7時RepeatAddressがSpuIRQAddressだったらIRQを発生させるように変更。(05.07.24) by Iori
+
+・Volume実機解析に基づき、エンベロープ再実装。(05.08.21) by Iori
+  Volume::getCurrentVolume()は-32768～32767を返すように変更。
+  上記変更により、SPUのCurrentVolume値Read時の<<1削除, MixerのVolume乗算部のシフト値を14→15に変更。
+
+--------------------------------------------------------------------------
+Eternal 1.41 release ->Eternal 1.50 beta 1 (v1.42) (2005/06/02) by T.Yano
+
+・SPUopen()されるまでSPUIRQWaitCPUActionを無効化 (03.08.27)
+  SPUIRQWaitCPUActionになっているとIRQ発生時にSPUrender()で要求したサイズ分波形生成しなくなってしまうので...
+
+・Quick Hack for "Update before accessing registers" (2004.11.9)
+  一旦、バッファリングすることでAudioDeviceへの極端に頻繁なアクセスを防止。ただし、暫定対策。通常のSPUasync()の高頻度呼び出しも含めた対策の予定。
+
+・SPUasync時でも、WaitCPUactionが効くように変更 (2005/01/21)
+  ePSXe 1.6.0 や PCSX では、SPU IRQへの応答が極端に遅くなる場合があり、Metal Gear Solidや実況おしゃべりパロディウスのオープニングで音が途切れ途切れになる症状が見られたので、SPU側で対策。本来、本体側の問題だが...
+
+・実効Volumeの読み出しレジスタを発見したので実装した。(05.02.19)
+  レジスタ0x1f801e00から2*24 word分、Voice 0からVoice 23までの実効音量を読み出すことが出来ることが判明。また、同様に0x1f801db8,0x1f801dbaにてメインVolumeの実効音量が読み出せることが判明。これらを実装した結果、Tales of PhantasiaのSound modeで各Voiceのレベルメータが動作するようになった。
+
+・Decoded Sound Buffer (0x0000 - 0x0fff) 領域の処理を実装。(2005.02.19)
+  XA ADPCM/CD-DAのL/Rデータの書込みに加え、Voice 0, Voice 3のデコードデータの書込みを実装。更に、当該領域での割り込みの発生とステータスレジスタのbit 0x0800への上記書込み領域(前半/後半)の反映を実装した。caetlaのXA ADPCM/CD-DAのプレーヤでの波形、スペクトル表示、"i miss you."のスペクトル表示、やるドラシリーズの会話時の口の動きなどが動作するようになった。
+
+・SPUasync - Smoothの小修正 (2005.02.24)
+  あまり意味なし。
+
+・Reverb offでもReverb work areaからの読み出し再生が行われるように変更。(05.05.14)
+  ウンジャマラミーのギター音が、Reverb offに設定した上でReverb work areaに22050HzのPCMデータを書き込むことで実現されていることが判明。この修正でギターの演奏音が出るようになった。
+
+・XA ADPCM/CD-DA用のバッファのUnderflow時のクロスフェードをとりあえず無効化。(05.05.14)
+  v1.41で導入したがバグがあったし、別方式で実装予定。
+
+・SPUasync()が呼ばれたらSPUupdate()を無効化するようにした。 (05.05.21)
+  SPUupdate()をSPUasync(68928)でエミュレートしていたが、SPUasync()と両方呼ばれると困るので...
+
+・AudioOut::async()を整理。 (05.06.01)
+  AudioOut::async()内のSmooth用PLLを AudioOut::updatePLL(), Wait用待ち処理を AudioOut::asyncWait()として分離。
+
+・頻繁なSPUasync()呼び出しに対応するため、AudioOut::async()を全面書き換え。 (05.06.01)
+  一時バッファにまず蓄え、ある程度たまったらAudioDeviceに書き込むようにした。
+
+・"SPU IRQ - Wait CPU action"と"Update before accessing register"の同時指定にバグがあったので修正。 (05.06.02)
+  WaitCPUAction中にレジスタアクセスがあると一気に時間を取り戻してしまって意味が無かった問題を修正。
+
+・全面書き換え後のAudioOut::async()において、Smooth時、AudioOut::updatePLL()に渡すcycle数が間違っていたので修正。(05.06.07)
+
+・Smooth時、AudioOut::updatePLL()が収束し損ねた時のリセット処理を追加。(05.06.08)
+
+・新エンベロープ実装。 Envelope、ADSR、Volumeにクラスを分けた。(05.06.20) by Iori
+
+--------------------------------------------------------------------------
+Eternal 1.40 release ->Eternal 1.41 release (2003/05/29)
+
+・Recording中にSPUclose()が呼ばれた場合、正常に記録できなかった問題を修正。SPUclose()時に、Recordingを停止するようにした。
+
+・RealtimeConfigDialog使用時、バッファサイズ変更などのAudioOutThreadの再起動を伴う操作中に、SPUclose()が呼ばれると、不正終了することがあった問題を修正。
+
+・SPUplayCDDAchannel()がまったく発音しなかった問題を修正。ついでにXAのバッファ溢れ時に書き込みポインタを戻した後、上書きするのではなくクロスフェードするように変更。雑音が殆ど目立たなくなった。
+
+・SPUinit()時の初期化が不十分だったため、SPUshutdown()後、SPUinit(),SPUopen()すると前回の音がなり続けていた問題を修正。
+
+・SPUrender()時に"Wait for XA buffer is free"が有効だとデッドロックする問題を修正。
+
+--------------------------------------------------------------------------
+Eternal 1.40 beta 7c->Eternal 1.40 release (2003/05/15)
+
+・Windows版でRealtimeConfigDialog使用時、バッファサイズ変更などのAudioOutThreadの再起動を伴う操作を行った後、RealtimeConfigDialogを閉じると、再生が停止してしまう問題を修正。
+  AudioOutThreadを起動したスレッドが終了すると、DirectSound, WaveMapperの再生が停止してしまうのが原因。RealtimeConfigThreadがstopRealtimeConfigThread()が呼ばれるまで終了しないようにした。
+
+・SPUasync時、stopAudioOutThread()が稀に不正終了する問題を修正。
+  SPUasync()中にAudioOut::stop()が呼ばれると、AudioDeviceにアクセス中に解放されるため。AudioOut::stop()の呼び出しをenterCS(), leaveCS()で保護した。
+
+・AudioDeviceOss.cppのgunshinnさん4/29版ベースOssThreadProc()の、再生が定期的におかしくなる問題を修正。
+  ただし、1.40リリースではブロッキングのみでwrite()する単純な方法を採用。
+
+・Linux版で/dev/dspがopen()出来なかったときのエラー処理を修正。
+
+・SDLの読み込みに失敗した時のエラー処理を修正。
+
+・Linux版でコンフィグファイルがopen()出来なかったときのエラー処理を修正。
+
+・ADSRボリュームが0の時でもPitch modulationの計算をするようにした。
+
+・AudioDevice.cpp中、using namespace std;を #ifdef __GNUC__で囲んでいたのを #ifndef _MSC_VERに変更。
+  Visual C++は、標準 C ライブラリ関数が std 名前空間に定義されないので...
+
+・Linux版でlibpthread.soを使っているくせにリンク(動的)していないSDLパッケージの読み込みに対処。
+  libSDL.soの読み込みに先立ち、libpthread.soをRTLD_GLOBALオプション付きでdlopen()するようにした。
+
+・ConfigDialogのデザインを整理。
+
+・Recording中はRecord Optionをいじれないように変更。
+
+・AudioDevice.cppのEmulatedSoundBuffer::getCurrentPosition()が実ミキシングポイントを返すようにした。
+  Timerで代用すると分解能は上がるかもしれないが、一度ずれると復帰できずに雑音だらけになるので。それに伴い、AudioDeviceSdl.cppでSDL_OpenAudio()に渡すdesired.samplesをLinux版のみ128に変更(Windows版はなぜか2048でないと駄目?)。
+
+・Linux版でFLTK使用に関する記載をAboutDialogに追加。
+
+--------------------------------------------------------------------------
+Eternal 1.40 beta 7->Eternal 1.40 beta 7c (2003/05/06)
+
+2003/04/29時点のgunshinnさんの変更版に対し、更に以下を変更 by T.Yano
+
+・AudioDeviceOss.cppのOssThreadProc()を更に大幅書き変え
+  RedHat Linux 8.0 (Kernel 2.4.18-14) + Celeron 1.4GHzにて、まだ再生が定期的におかしくなったので...
+
+・Linux版でConfigDialogでCancelボタンを押してもDefautやRec Optionによる設定変更が反映されてしまう問題を修正
+  spuEternal_fl.fl: makeConfigDialog()の返り値を導入した。それに伴い、ConfigLinux.cpp: showConfigDialog()ほか関連箇所を修正。
+
+・Linux版でRealtimeConfigDialogがESCキーによる中断時の問題を修正
+  RealtimeConfigDialogをアクティブにするまで中断処理が終了しない問題とWindowが閉じずに残骸がのこる問題をFl::flush()を追加することで解決。
+
+・Linux版で無効なAudioDeviceをリストボックスからの排除する方法をhide()からdeactivate()に変更
+  FLTKのバグ(?)で先頭のItem("DirectSound")がhide()しても表示されてしまって気持ち悪いので...
+
+・Linux版でConfigDialogでの設定時に、SDLライブラリが正常に読み込めるかどうかのチェックを追加
+  linux.mak中、-lSDLを指定していても、実行時にlibSDL.soが無くて良い訳ではないので、Windows版と同様にチェックするようにした。
+  (-lSDLを指定しないとlibSDL.soが他のshared libraryをリンクしている場合、dlopen()でロードしたlibSDL.soが依存するshared libraryとのdynamic linkに失敗する(?)。 -lSDLを指定していても-staticオプションを指定しない限りshared libraryがリンクされるのでLGPL上も問題ないはず。)
+
+・AudioDevice.cppがVisual C++でコンパイルできなくなっていたのを修正
+  using namespace std;を #ifdef __GNUC__で囲んだ
+
+
+以下、gunshinnさんによる変更点
+★2003/04/29時点でのファイル変更点
+1.40 beta 7a からの変更点
+
+・linux.h
+	<sys/select.h> と <errno.h> をincludeに追加
+・AudioDevice.cpp
+	EmulatedSoundBufferのコンストラクタで、 m_pBuffer の内容を0で初期化するように
+・AudioDeviceOss.cpp
+	SNDCTL_DSP_SETFRAGMENT のパラメータ変更、およびコメントを追加
+	OssThreadProc() を大幅に書き換え。スムーズに再生されるように。
+・AudioOut.cpp
+	async() で、 コメントアウトしておいた部分の AudioDevice::signal() を有効に
+
+--------------------------------------------------------------------------
+Eternal 1.40 beta 6->Eternal 1.40 beta 7 (2003/04/20)
+
+2003/03/23時点のgunshinnさんの変更版に対し、更に以下を変更 by T.Yano
+
+・gcc -Wall 時のwarning対策のための軽微な変更
+  AudioDevice.cpp, AudioDeviceOss.cpp, AudioDeviceWmapper.cpp, Envelope.h,
+  Reverb.cpp, SPU_Main.cpp, Linux.cpp
+
+・SPUasync()-WaitにおけるWaitの掛け方を少し変更
+  AudioOut.cpp
+
+・Reverbを整理 (Off, TiMidity, Freeverb, Iori's, Neill's)
+  "Inchiki" -> 廃止
+  "Tmidity" -> "TiMidity"
+  "Freeverb" -> そのまま
+  "Inchiki2" -> "Iori's"
+  "Neill Corlett" -> "Neill's"
+  Config.cpp, ConfigWindows.cpp, Reverb.h, spuEternal_fl.fl
+
+・Realtime Config Windowが有効のとき、SPUopen()した直後にSPUclose()すると正常にclose出来なかった問題を修正
+  ConfigLinux.cpp, ConfigWindows.cpp, SPU_Main.cpp
+
+・AudioOutMethodがTimerの時、停止時に稀に不正終了する問題を修正
+  Timerイベント実行中に停止するとAudioDeviceが使用中に解放されて不正終了することがあったのでCriticalSectionを使用するように変更
+  SPU_Main.cpp
+
+・SPUメモリへのデータ転送中にSPUファイル記録開始を行うと転送中のデータが正しく記録できない問題に暫定対処。
+  本来、State Saveを拡張すべきだが、とりあえず簡易対処のみ
+  ConfigWindows.cpp, SPU.cpp, SPU.h, spuEternal_fl.fl
+
+・MinGW版のlibraryNameを"Eternal SPU Plugin (MinGW)"に変更
+  InterfaceFPSE.cpp, InterfacePSEmuPro.cpp
+
+・SPUwriteDMA(), SPUreadDMA()もSPUファイルに記録するように変更
+  InterfacePSEmuPro.cpp
+
+・SPUfreeze()復元時のレジスタ復元時に、状態復帰だけでなくレジスタ書込み時に発生する動作を引き起こしていた問題を修正
+  InterfacePSEmuPro.cpp, SPU.cpp SPU.h
+
+・SPUupdate()をSPUasync()へのWrapperとして実装
+  InterfacePSEmuPro.cpp, InterfacePSEmuPro.h, spuEternal.def
+
+・Inchiki2リバーブが演算overflowで音が割れることがあった問題を修正
+  Reverb.h
+
+・MinGW版でDllMain()が呼ばれない問題を修正
+  SPU_Main.h
+
+・MinGW版、Linux版のMakefileを整理
+  base.mak, windows.mak, linux.mak
+
+・fluidがShift-JISコードを正しく扱えずに変になることがあったのでspuEternal_fl.flの漢字コードをEUCに変更
+  Shift-JISの2バイト目が'{'や'}'の時、'{}'の対応関係を誤判定するので...
+
+・Components/revmodel.cppがVisual C++でコンパイルできなくなっていたので修正
+  for (int x;;) のスコープの互換性の問題
+
+・spuEternal.rcがwindresでコンパイルできるようにafxres.hを修正
+
+
+以下、gunshinnさんによる変更点
+★2003/03/23時点でのファイル変更点
+1.40 beta 6 ＋ YanoさんのAudioOut.cpp修正版 からの変更点
+
+・AudioDevice.h
+	AudioDevice::signal() を追加
+
+・AudioDeviceDsound.cpp
+	AudioDeviceDsound::signal() を追加
+
+・AudioDeviceDsound.h
+	AudioDeviceDsound::signal() を追加
+
+・AudioDeviceOss.cpp
+	pthread_mutex_init()の引数修正
+	assert()によるチェックを所々に挿入
+	pthread_create()にpthread_attr_tを指定するように（現状では意味なし）
+	pthread_mutexattr_settype()が使えないようなので外す
+	AudioDeviceOss::signal() を追加、それに伴い次のメンバ関数を修正： AudioDeviceOss::AudioDeviceOss() AudioDeviceOss::~AudioDeviceOss() AudioDeviceOss::stop() AudioDeviceOss::OssThreadProc()
+	AudioDeviceOss::lock() および AudioDeviceOss::unlock() やっぱりmutex使うようにしてみる
+	AudioDeviceOss::OssThreadProc() のロジック再調整
+
+・AudioDeviceOss.h
+	bOssThreadEndをvolatileに
+	doxygen形式のコメントを適宜追加
+	メンバ AudioDeviceOss::signal() AudioDeviceOss::condOssThread を追加
+
+・AudioDeviceSdl.cpp
+	AudioDeviceSdl::signal() を追加
+
+・AudioDeviceSdl.h
+	メンバ AudioDeviceSdl::signal() を追加
+
+・AudioDeviceWmapper.cpp
+	メンバ AudioDeviceWmapper::signal() を追加
+	メンバ AudioDeviceWmapper::hWaveOutThreadMutex AudioDeviceWmapper::hWaveOutThreadSignal の追加に伴い色々修正
+	AudioDeviceWmapper::lock() と AudioDeviceWmapper::unlock() をちゃんとスレッドセーフにしたことで、処理速度が若干下がった代わりに少ないバッファで済むようになった？
+
+・AudioDeviceWmapper.h
+	メンバ AudioDeviceWmapper::signal() を追加
+	メンバ AudioDeviceWmapper::hWaveOutThreadMutex を追加
+	メンバ AudioDeviceWmapper::hWaveOutThreadSignal を追加
+
+・AudioOut.cpp
+	コンストラクタでのメンバ初期化順で警告が出ていたのを修正
+	AudioOut::init() で、 ConfigAudioDeviceの値をWin/Linux共用にする。AudioDeviceOssは1から3に、AudioDeviceOpenalは3から4に
+	AudioOut::async() をWindowsでの挙動修正を参考に、Linux版も修正
+	AudioOut::async() で、 AudioDevice::unlock() の呼び出し直後に AudioDevice::signal() を追加
+
+・base.mak
+	細かい部分を修正
+
+・Config.cpp
+	Config::setDefaultValue() にて、 Config::AudioDevice のデフォルト値をWinとLinuxで場合分け
+
+・Config.h
+	Config::logWriteRegister() 宣言の F_INLINE の位置で警告が出ていたのを修正。……というか、使ってない？
+
+・ConfigFPSE.cpp
+	GETINTVAR() と SETINTVAR() が警告出まくりなので、##varをただの(var)に変更
+
+・ConfigLinux.cpp
+	ライブラリをGTK+からFLTKに変更
+
+・ConfigLinux.h
+	ライブラリをGTK+からFLTKに変更
+
+・ConfigLinuxPSEmuPro.cpp
+	ConfigWindowsPSEmuPro.cppに合わせ、 ConfigLinuxPSEmuPro::loadConfig() と ConfigLinuxPSEmuPro::saveConfig() にセーブ項目の追加
+
+・InterfacePSEmuPro.cpp
+	SPUabout() をWinとLinuxで共通の処理に
+
+・Linux.cpp
+	新規作成
+	nanosleepStrict()の実装
+
+・linux.h
+	コメントの改良
+	#include <gtk/gtk.h> を削除し #include <signal.h> を追加
+
+・linux.mak
+	細かい部分を修正
+
+・Makefile
+	新規作成
+	いちいち make -f *.mak としなくても済むように
+
+・SPU_Main.cpp
+	pthread_mutex_init()の引数修正
+	assert()によるチェックを所々に挿入
+	volatile属性を bAudioOutThreadEnd bCriticalSection に追加（意味を分かりやすくするために）
+	doxygen形式のコメントを適宜追加
+	initCS() でbVtalrmを一つ消し忘れていたのを修正
+	pthread_mutexattr_settype()が使えないようなので外す
+
+・spuEternal_fl.cxx
+	新規作成
+	FLTKを使ったコンフィグ・aboutダイアログ
+
+・spuEternal_fl.fl
+	新規作成
+	FLUIDのファイル
+
+・spuEternal_fl.h
+	新規作成
+	spuEternal_fl.cxxのヘッダ
+
+・StreamSound.cpp
+	コンストラクタでのメンバ初期化順で警告が出ていたのを修正
+
+・VagBlock.cpp
+	コンストラクタでのメンバ初期化順で警告が出ていたのを修正
+
+・Components\revmodel.cpp
+	forスコープ内のint i宣言修正
+
+・windows.mak
+	細かい部分を修正
+
+--------------------------------------------------------------------------
+Eternal 1.40 beta 5->Eternal 1.40 beta 6 (2003/03/09)
+
+・SPUasync - Smooth を見直し (by T.Yano)
+"Update before accessing register"が有効になっているとSPUasync - Smoothが正しく動かないバグを修正。
+
+・"Update before accessing register"の仕組みを見直し (by T.Yano)
+バッファに余裕がある限り、レジスタ参照の前に最低1サンプル確実に生成するようにした。
+
+・SPUasync - Wait の Sleep() 実行時の Priorityを調整 (by T.Yano)
+標準以上のPriorityのスレッドからSPUasync()が呼ばれるとシステムの反応が鈍くなる問題に対処。
+
+--------------------------------------------------------------------------
+Eternal 1.40 beta 4->Eternal 1.40 beta 5 (2003/02/09)
+
+・Neill Corlett氏解析に基づくReverbを試験実装 (by T.Yano)
+P.E.Op.S. DSound Driver 1.4で新規導入された、Neill Corlett氏解析に基づくReverbを実装してみた。
+
+--------------------------------------------------------------------------
+Eternal 1.40 beta 3->Eternal 1.40 beta 4 (2002/09/23)
+
+・Noiseを全面的に変更 (by T.Yano)
+Noise発生器をm系列発生器に変更し、全チャネルで共通化。Noise周波数の計算と、それに基づくNoise波形更新タイミングを変更。
+
+--------------------------------------------------------------------------
+Eternal 1.40 beta 2->Eternal 1.40 beta 3 (2002/09/??)
+
+・PMOD処理後のTruePitchを0x3fffにクリップするように修正。
+Yanoさんの解析に基づき、PMODに供給するPitchはクリップせず、PMODのオンオフに関わらずTruePitchをクリップするようにしました。
+
+--------------------------------------------------------------------------
+Eternal 1.40 beta 1->Eternal 1.40 beta 2 (2002/09/14)
+
+・リバーブのミックス順序を修正。
+Mixerにて、MainとReverbはそれぞれ独立して音量調節後ミックスしていたのを、Reverb volumeをかけたReverbをMainにミックスした後にMain volumeをかけるのが正しいようで、修正しました。
+
+・Pitch, TruePitchを0x3fffにクリップするように修正。
+以前、Pitchを14bits幅に抑える為に「& 0x3fff」して、ガンパレでピアノ音が妙に低い音程になっていた事があり、16bits幅フルに使うようにした経緯がありました。
+で、TODのサウンドテストのSEでどーも実機と違う音がするなぁ...と常々思っていたんです。(妙に音程が高い...)
+そこで、Pitch値を14bits幅でクリップしてみたところ、実機と同様のピッチで鳴ってくれるようになりました。(SE No.17,25等)
+さらに、PMODを掛けた後のピッチ(TruePitch)にも同様の処理を入れると、FF7のナイツオブラウンド9人目(岩を投げつけるヤツ)登場時の効果音が実機通りの「汚さ」になりました。
+肝心のガンパレ, ピアノ音も、16bits幅だと若干音程が高かったようで、14bits幅クリップにより実機通りの音程になりました。
+14bits幅をオーバーしたPitch値は、例の会議の曲では0x49ac, 0x41a0が確認できました。
+# 即ち、ガンパレのサウンドドライバは、Pitchが0x3fffでクリップする事を前提にしてプログラムされている!?
+# というか、PG担当者はこの事に気付いているのだろうか...?(笑)
+# 基のSMFではこの音程になる筈だったのが、独自形式に変換してPSで鳴らしたら音程が低くなったんじゃ無かろうか...
+
+・「Reverb type」を追加。
+新たに2種類のリバーブアルゴリズム(Freeverb, Inchiki2)を追加して、新旧合わせて4種類を切り替えられるようにしました。
+...まあテスト用なんですが(汗)
+解析・実装中のInchiki2で、計算間違いして「じゅわあーー」とデカいノイズが出た時に、すぐリバーブを切られるようにという用途もあり(笑)
+
+--------------------------------------------------------------------------
+Eternal 1.31 beta 3->Eternal 1.40 beta 1 (2002/08/29)
+
+・「Cache VAG decode」機能を追加。
+VAGブロック毎にデコード済みサンプルをキャッシュして、高速化を目論んでみました。
+各VAGブロックキャッシュにs_1, s_2を保持させることにより、VAGストリームのような特殊な処理にも対応可能です。
+問題点は、キャッシュしない時と比べて波形が変わってしまう事ですが...
+今のところ、ピッチモジュレーション全般が変化するのと、SO2の曲No.42, VPの曲No.9で音色の変化が目立ってしまっています。
+
+・新リバーブに向けて、実機の解析を開始...
+
+--------------------------------------------------------------------------
+Eternal 1.31 beta 2->Eternal 1.31 beta 3 (2002/07/04)
+
+・細かい修正。
+位相反転に関するバグを修正しました。マイナス時の値が1多かったようです(汗)
+SDLのLockAudio, UnlockAudioの位置がコールバック関数内だったのを、lock, unlockに移動しました。
+安全のため、Buffer sizeのデフォルト値を64に変更しました。
+Aboutダイアログ表示処理をConfig側にまとめました。(Winのみ)
+Wait時のウェイトをかける条件を、誤差44サンプル未満から0サンプル未満に変更しました。(Linuxでは精度が上がったかも...)
+Wait時、Sleepの代わりにパフォーマンスカウンタを使用してみました。(Winのみ, あんまり効果無しでした(汗))
+エンベロープテーブルの初期化をEnvelope自身が行うようにしました。
+Enter, LeaveCriticalSectionは、必要な場合だけ行うようにしました。(Winのみ)
+Update before accessing registerの薄いチェックを廃止しました。 SPUasyncによって必要無くなったので...
+ノイズ周波数を微調整してみました。実機のノイズ音に近くなりましたが、いかんせん生成ロジックが違うので、全ての周波数が同じというわけにはいかないようです...(汗)
+コンフィグ時、SDLライブラリ(sdl.dll)の存在チェックを追加しました。
+
+・Record機能を改装した。
+レジスタのWrite, Read、DMAのWrite, Read、XA, CDDAのログが取れるようになりました。
+右下のRecording optionで、ロギングするイベントを選択できます。
+標準的なSPUログとしては、REG writeとDMA writeのみで良いと思います。
+
+--------------------------------------------------------------------------
+Eternal 1.31 beta 1->Eternal 1.31 beta 2 (2002/05/30)
+
+・ストリームサウンドのバッファあふれ処理を変更した。
+バッファが一杯になったら、書き込み位置と読み込み位置との距離を強引に補正するようにしました。
+ePSXe & SPUasync時に、「プププププ...」とノイズが鳴り続けるのを防げるようになった代わりに、
+少し音が飛んでしまうようになりました(汗)
+私は、こちらの方が聴きやすいと感じましたが...ダメッスか?(笑)
+
+・ストリームサウンドをCDDAの再生に対応した。
+CDDA再生時は、メモリコピーで効率良く転送されるようにしました。
+FPSE, 旧AdriPSX用に入れていた処理が、CDDA再生時のパラメータと同じになっていたので、
+判断の方法を変えました。
+
+・ストリームサウンドの未再生サイズのチェックを微調整した。
+4096->2048に変更しました。
+SPUplayADPCMchannelでのチェック間隔をSleep(0)にしたので、この程度でも大丈夫であろうと思いまして...
+WaitForXABufferIsFreeが有効の場合に、ガタついてしまうようであれば、4096に戻す必要があるかもしれません...
+
+・CDDA再生専用インターフェースを追加した。
+「void CALLBACK SPUplayCDDAchannel(short *pcm, int nbytes)」
+calbさんへのプレゼンテーション用です。
+
+・ボイスの処理順序を変更した。
+ADSRボリュームが0でも、VAGポジション移動処理だけは常に全ボイス行われるようにしました。
+実況おしゃべりパロディウスの症状が改善されたとの事です。
+
+・細かい性能の最適化。
+
+・以下、軍神さんの修正。
+
+(patch2.txtより)
+
+131beta1からの変更点：
+
+☆base.mak, windows.mak, linux.mak
+・微調整
+
+☆linux.h, AudioOut.cpp
+・nanosleep()の使い方を改善。
+
+☆AudioDeviceOss.cpp
+・スレッド部分を調節、というか試行錯誤中。
+
+☆ConfigLinux
+・デバッグ出力外す
+・余計なenterCSとleaveCSを外す
+・使わないウィジェットポインタをメンバから外す
+
+☆ConfigLinuxPSEmuPro.cpp
+・エラー処理を微調整。
+
+☆InterfacePSEmuPro.cpp
+・SPUfreeze()の「SPUplayADPCMchannel(&pF->xaS);」前後にleaveCSとenterCSを追加（こうしないと、Linuxでステートロード時にデッドロックした）
+・コメント追加。
+
+☆SPU_Main.cpp
+・Linuxでの、AudioOutThreadのスレッド優先順位を変更。……目に見えた効果は現れず、というか使い方が今一よく分からない（汗）。
+
+(patch3.txtより)
+
+☆SPU_Main.cpp
+・LinuxでもTimerモード追加（カーネル2.4以降でないと動かんかも……？）
+
+☆Config.h
+・destroyRealtimeConfigDialog()をvirtualに。
+
+☆ConfigLinux
+・RealtimeConfigでGTK+のタイマーを使うのをやめる。（どうも干渉が起きたようなので……）
+・コンフィグでTimerを選択可能に。
+
+☆linux.mak
+・タイマー追加に当たって、使用ライブラリ追加
+
+--------------------------------------------------------------------------
+Eternal 1.30->Eternal 1.31 beta 1 (2002/05/25)
+
+・GCC, Linux版のコンパイルを可能にした。
+これに伴い、オーディオ出力関連を大幅に修正しました。
+
+・AudioDeviceを追加した。
+
+Windows環境：
+
+DirectSound ... DirectSoundを使ってオーディオ出力します。
+                DirectX3以上がインストールされている必要があります。
+
+SDL         ... SDLライブラリを使ってオーディオ出力します。
+                SDL.dllが必要です。
+                Systemフォルダ, PSエミュ本体のあるフォルダ, Pluginフォルダのいずれかに置いて下さい。
+
+Wave Mapper ... Windows標準のWave Mapperを使ってオーディオ出力します。
+                Windows95以降であれば使えるはずです。
+                もちろん、Waveデバイスが1つも無い環境では、使用できません。
+
+※ Wave Mapperは、現在の実装だとどうも動きが変っぽいです...
+
+Linux環境：
+
+OSS         ... Linux標準(?)のOSSを使ってオーディオ出力します。
+
+SDL         ... SDLライブラリを使ってオーディオ出力します。
+                libSDL.so(?)が必要です。
+
+・Thread, Timerの動作をEternal 1.3 beta 2の実装に戻した。
+AudioDevice追加によるAudioOutの修正がまだ途中でして...
+Yanoさんやsyoさんの問題の環境で、このasyncを使った方法が問題無ければ、本採用にしたいと思います。
+
+・XAサウンドの波形を、0x00000 - 0x007ffに反映させるようにした。
+TODでXAサウンド再生時にレベルメーターが動くようになりました。
+「I miss you.」ではダメだった模様...
+
+・以下、軍神さんの修正。(patch.txtより)
+
+□追加ファイル
+　AudioDeviceOss.h AudioDeviceOss.cpp
+　ConfigLinux.h ConfigLinux.cpp ConfigWindows.h ConfigWindows.cpp 
+　ConfigLinuxPSEmuPro.h ConfigLinuxPSEmuPro.cpp ConfigWindowsPSEmuPro.h ConfigWindowsPSEmuPro.cpp 
+　linux.h win.h 
+（あとmakeファイルで windows.mak linux.mak base.mak）
+
+□追加ファイルの説明
+☆AudioDeviceOss
+・AudioDeviceのOSS使用版。
+☆ConfigWindows
+・ConfigのWindows用派生クラス。
+☆ConfigLinux
+・ConfigのLinux用派生クラス。
+☆ConfigWindowsPSEmuPro
+・ConfigPSEmuProのWindows版。
+☆ConfigLinuxPSEmuPro
+・ConfigPSEmuProのLinux版。
+☆linux.h
+・Linuxでしか使わない主要なファイルのインクルード。Windowsにしかない型や定数、関数の宣言、定義。
+☆win.h
+・単に「#ifdef _WINDOWS」で「#include <windows.h>」するだけ。
+
+□既存ファイルの変更点
+☆AudioDevice
+・Linux関連の処理追加。
+☆AudioDeviceSdl
+・AudioDevice外でのSDL APIによるスレッドとタイマー処理を外したので、SDL__InitSubSystemとSDL__QuitSubSystemを、SDL__InitとSDL__Quitに。
+・Linux関連の処理追加。
+☆AudioOut
+・Linux関連の処理追加。
+☆Config
+・OS依存部分を、派生クラス（～Windows、～Linux）に移行。
+・上記に伴い、一部メンバをprotectに。
+☆ConfigPSEmuPro
+・機能をConfigLinuxPSEmuProとConfigWindowsPSEmuProに移行して、削除。
+・ConfigPSEmuPro.hにてConfigLinuxPSEmuProとConfigWindowsPSEmuProのインクルードファイルを読み分け。（他ファイルの修正を最小限に抑えるために）
+☆Envelope.h
+・３１行目 「static int ADSRResolution; // ADSRVolumeX分解能」 の末尾に半角スペース追加。（こうしないとgccでコンパイルエラー）
+☆FPSE_Sdk.h
+・全体をextern "C" {}で囲む。
+☆Global.h
+・gccでは「F_INLINE」は「inline」と定義。
+☆InterfacePSEmuPro
+・関数宣言部をextern "C" {}で囲む。
+・Linux関連の処理追加。特にSPUabout()関連。
+・「#include "PSEmuPro_PSEmu PlugIn Defs.h"」を「#include "PSEmuPro_PSEmu Plugin Defs.h"」に。（Unixでは大文字・小文字の識別がうるさいです）
+☆SPU_Main
+・Linux関連の処理追加。
+・ConfigPSEmuPro部分を修正。
+・クリティカルセクション、スレッド、タイマーをそれぞれWindows, Linuxで場合分け。LinuxではAudioOutThread_Timerを無効。（タイマー系APIはカーネル2.4以降でしか使えないとかいうホームページを見かけたので）
+☆SPUDebug
+・「#include <windows.h>」を「#include "win.h"」に。
+
+--------------------------------------------------------------------------
+Eternal 1.3 beta 2->Eternal 1.3 beta 3 (2002/05/05)
+
+・GUIを変更した。
+Audio out methodがSPUasyncの時のみAsync modeが選択可能なようにしました。
+Audio out methodがSPUasyncの時は、Wait for XA bufferがオフ固定になるようにしました。
+(オンですと、本体がロックされ続けてしまいます)
+
+・Configを修正した。
+PCSXで、メニューのConfiguration->Soundからコンフィグ画面を呼び出し、終了すると落ちる不具合を修正しました。
+
+・Decimate処理を外した。
+FF7等一部のゲームで、音色に関する問題があるので、一時的に外しました。
+
+・ノイズ音量を上げた。
+SPUasyncによって、FF7の効果音が完璧に再現できるようになったので、ランダムノイズの振幅を従来の24576から32767に戻しました。
+
+・コンパイルオプションを変更した。
+* 呼び出し規約を__cdeclから__fastcallに変更
+* インライン展開の制御をインライン関数のみから適合可能なものすべてに変更
+...多少は速くなったと思います。
+
+・YanoさんのSPUasync修正。
+(1) async用変数初期化の修正
+  最初からバッファ中心にくるようにしました。
+(2) AudioOut::async() の大幅変更
+  - "Smooth" を PLL制御化した都合上、書き込み位置の補正等を
+    波形生成より前にもってきました。
+  - 正負方向のラップアラウンド処理
+  - async() が呼ばれる度に、毎回書き込み位置チェックを実行
+  - "Wait"で1msec以上ずれたら Sleep()するようにした(Wait精度向上)
+(3) 一度にLock() 出来ないような大きさの Lock() を分割実行
+
+--------------------------------------------------------------------------
+Eternal 1.3 beta 1->Eternal 1.3 beta 2 (2002/05/01)
+
+・GUI関係を全体的に修正した。
+
+* Audio out methodをコンボボックス化
+Audio out methodの説明：(readmeにそのまま使うつもりで書きました)
+
+サウンドを出力する方法を指定します。
+お使いのPC環境によって、最適なものを選択して下さい。
+
+Thread   ... 互換性はTimerよりも高く、負荷はTimerよりも大きい。
+
+Timer    ... 互換性はThreadよりも低く、負荷はThreadよりも小さい。
+
+SPUasync ... 互換性は最も高いが、負荷も最も大きい。
+             ※PSエミュ本体がこの機能に対応している必要があります。
+
+* Change total samplesをAsync modeに変更、コンボボックス化
+Async modeの説明：(readmeにそのまま使うつもりで書きました)
+
+SPUasyncの動作モードを指定します。
+
+Simple   ... 複雑な処理を行いません。
+             フレームレートが早いまたは遅いと、音とびが頻繁に発生します。
+
+Wait     ... フレームレートが早い場合、最適なフレームレートになるようにウェイトをかけます。
+             フレームレートが遅い場合、同じ音が繰り返し鳴るのを防ぐため、遅れている分をクリアします。
+
+Smooth   ... フレームレートに応じて、生成するサンプルの量を調節します。
+             音とびが発生しにくくなります。
+             ただし、Valkyrie Profile, Metal Gear Solidのような音声の再生にSPU-IRQを使用するソフトでは、
+             エミュレートに問題が発生する可能性が高くなりますので、注意して下さい。
+
+* 上記のGUI変更に伴い、Config画面の表示関係の修正
+
+* realtime configを変更
+Cancel, Defaultボタンを無くし、DefaultのあったところにRecordを表示
+realtime configを閉じられるようにした (右上のXボタンやESCキー)
+
+・FPSEインターフェース関係を整理した。
+FPSEインターフェースを、単なるPSEmuProプラグインのラッパーにしてしまいました。
+これだけのためにSPUがインライン化されるのもアホらしいので...
+
+コンフィグの設定データは、FPSEとPSEmuProで共通になりました。(レジストリ)
+
+・コンパイルオプションを変更した。
+ランタイムライブラリを、「マルチスレッド」から「マルチスレッド(DLL)」に変更したところ、バイナリサイズが70KBも減りました(笑)
+特に問題は発生していないようですし、性能も落ちていません。
+もしかしたら、何か外部のランタイムライブラリが必要になったのかもしれませんが...
+
+試しに他のオプションもいじってみました。
+ターゲットプロセッサをブレンドからPentium Proに変更 ... 全く変わらず
+呼び出し規約を__cdeclから__fastcallに変更 ... ホンのちょっと速くなった
+インライン展開の制御をインライン関数のみから適合可能なものすべてに変更 ... ちょっと速くなったが、バイナリサイズが8KB増えた
+
+うーむ...微妙です(笑)
+
+・Wait for XA buffer is freeの動作を変更した。
+バッファの状態をチェックするインターバルを、Sleep(1)からSleep(0)に変更しました。
+これによって、CPU使用率が100%近くになってしまいますが、Sleep(1)で問題が起こっていた環境でも、
+Wait for XA buffer is freeがうまく働くようになっていると思います。
+
+・SPUasync関係の修正
+累積cycleが0ではなく768以上の場合に波形生成処理を行うように修正しました。
+SPUasyncでUpdate before accessing registerをオンにした時に、性能が落ちにくくなりました。
+Async modeのコードを追加しました。
+
+・Thread, Timerの動作を修正した。
+この修正は一時的な実験用に使用するためのもので、通常リリースで削除すると思います。
+
+updateBuffer呼び出し時に、AudioOut::asyncを使って分解能を一定に保つように工夫してみました。
+GetCurrentPosition()ではなく、timeGetTime()の精度に依存して波形生成するようにしました。
+timeGetTime()が1msの分解能を持ち、GetCurrentPosition()の逆戻りのような現象が起きなければ、
+Sound buffer sizeの調節だけで、PC環境に依存しない動作をさせる事が可能になっていると思います。
+
+※注意：Async modeはSimpleにしておいて下さい。
+
+Wait CPU actionも、単純ですが実装してありますので、VPできちんと再生されなかった環境の方は、是非試して頂けたらと思います。
+
+--------------------------------------------------------------------------
+Test11->Eternal 1.3 beta 1 (2002/04/29)
+
+・XAサウンドの補間処理を改善した。
+XAバッファがカラッポの時は、補間用バッファの先頭をクリアするようにしました。
+XAデータがきちんと連続して送られてきていれば、XAバッファがカラッポになる直前に新しいデータが送られてくるはずであり、カラッポになるという事は、FPSが落ち込んだかXAデータが終端に達したという事になります。
+FPSが落ち込んでXAが途切れた場合、ちゃんと補間してもどうせプチノイズの発生は避けられないので、この実装でも問題無いと判断しました。
+
+・Change total samplesを追加した。
+Audio out threadがSPUasyncの時に作用します。
+このオプションをオンにすると、SPUasyncの時でも音が途切れずに再生する事が可能になります。
+ただし、あまりにもFPSが早すぎたり遅すぎたりすると、うまくいかない事があります。
+※このオプションをオンにすると、波形生成量が環境によって変わるため、SPU-IRQ等を使うソフトでは使わない方が良いかもしれません。
+
+...このネーミングではマズいので、機能に合ったわかりやすい名前を付けたいんですが...
+
+・SPUasync関係の動きを少々修正した。
+Audio out threadがSPUasyncの時、各Special game fixは以下の動作をします。
+* Update before accessing register
+レジスタアクセス直前に、必ず1サンプル生成させます。
+ただし、1度のSPUasync間内で1サンプルしか生成しません。
+FF9(飛空挺ヒルダガルデのテーマ)では、こうしないと分解能をいくら上げても音欠けが発生してしまいます。
+* SPU IRQ-Wait CPU action
+SPUasyncで波形生成する際、SPU-IRQが発生した時点で波形生成が中断します。
+ただし、次のSPUasyncではSPU IRQ-Wait CPU actionは有効になりません。
+あくまでSPU-IRQが発生したSPUasync間だけ中断します。
+* SPU IRQ-Force interruption flag7
+通常と同じです。
+
+・Move vag position methodを削除した。
+YanoさんのVAG移動処理関連の修正により、ステートロードやSPUファイル再生時の音欠け現象が直っていました。
+というわけで、Oldは不要になりました。
+
+・Realtime config windowを修正した。
+Audio out threadの変更が可能になりました。
+
+--------------------------------------------------------------------------
+Test10->Test11 (2002/04/27)
+
+・XAサウンドを線形補間処理するようにした。
+最初のセクタが送られてきた場合、頭で「プチ」と雑音が入る事があるという問題点があります。
+本体側で線形補間処理(44100Hzへのリサンプル含む)をしてもらうか、
+本体に「このセクタは先頭のセクタだよ」と教えてもらうしか解決方法がありません。
+
+・新インターフェース SPUasyncを追加した。
+
+void CALLBACK SPUasync(unsigned long cycle)
+
+この関数は、Audio out methodを「SPUasync」に設定する事で使用する事ができます。
+本体から送られてくるR3000Aの経過クロック数を受け取り、その累積数をもとに波形生成を行います。
+本体側は必ず、内部時間で1秒間経過する毎にcycleの合計が33868800になるようにする必要があります。
+
+具体的には、添付されているPCSXのソースR3000A.cの102-108行目を参照して下さい。
+現在は、負荷とのバランスを考えて64サンプル分を一気にわたしています。
+VPの音声では、256サンプルまでは大丈夫で、512にしたら例の現象が起きました。
+
+--------------------------------------------------------------------------
+Test9(Eternal SPU 1.2)->Test10 (2002/02)
+
+Yanoさんの修正。
+
+Eternal SPU v1.20(Test9)からの主な変更点 by T.Yano (02.02.09)
+
+[0] Version番号を変更
+v1.20(Test9)と両方を比べるために、勝手にv1.21にしてしまいました。
+
+[1] WaitCPUAction中の波形生成挙動を変更
+既に生成された波形の再生が終わりそうになるまで波形生成を保留し、その後は
+WriteCursorが進んだ分づつ波形生成。WaitCPUActionが解除されたら、PlayCursor
+位置まで一気に波形生成。これにより、SPU-IRQになかなか応答しないソフトでも
+WaitCPUActionによる問題が出にくくなるはず。
+
+[2] 波形生成のサンプル数の計算アルゴリズム変更
+DirectSoundBufferのPlayCursorが戻る問題(私だけ?)の対策。前回波形生成した時
+からの時間経過から見積もった生成すべきサンプル数と、PlayCursorの差分を比べて
+wrap around処理の必要性を判定。PlayCursorがバッファ量の半分以上戻らず、かつ
+PlayCursorがバッファ量以上進まなければ正しく判定可能。
+
+[3] SPU::updateRegister()を廃止
+SPU::updateRegister()を廃し、SPU::readRegister()に埋め込んだ。マルチスレッド
+セーフに向けた布石(?)。H_SPUIsOn1,2の読出しがちょっと遅くなったかも...
+
+[4] H_SPUstat, H_SPUctrlの読出し値を修正
+spu_memo.txtに記載したDMAread, DMAwrite, 非DMAwrite設定による挙動を実装。
+
+[5] H_SPUaddr, H_SPUdataの読出し値を修正
+spu_memo.txtに記載したように最後に書いた値が読めるだけのように変更
+
+[6] 非DMA転送アルゴリズムを修正
+spu_memo.txtに記載した非DMA転送の挙動を実装。H_SPUdataへの書き込みを最大
+32wordバッファリングし、H_SPUctrlのビット0x04への書き込みで
+SPU::flushXferBuffer()を実行するようにした。
+
+[7] Flag7強制IRQの条件を制限
+直前に通常のSPU-IRQを発生していたチャネルのみでFlag7強制IRQが発生するよう
+に修正。
+
+[8] Voice::processVagHeader()追加
+Voice::moveNextVagPosition()から処理の一部を抜き出し、Voice::processVagHeader()
+に分離した。(すいません、単なる好みの問題です。) また、ChannelActiveの変更
+タイミングをspu_memo.txtに従って変更。
+
+[9] StartAddress, RepeatAddressが奇数の時の挙動を修正
+StartAddress, RepeatAddressが奇数の時の挙動をとりあえず中途半端に実装。単に
+偶数アドレスにして使うだけ。
+
+[10] 出力サンプルのフィルタリング処理変更
+補間(Interpolate)だけでなくDecimateも実装。あまり効果ない? (XAのフィルタ
+リングもいじっていいですか?(笑)
+
+
+(2002/02/11付けのメールより)
+SPU::XferCountの初期化忘れを直したのと、下記のテストコードを埋め込んだ
+AudioOut.cppをお送りします。
+
+--------------------------------------------------------------------------
+Test8->Test9 (2002/01/23)
+
+・Audio out methodを追加した。
+1. Another thread
+従来の方法。波形生成用の別スレッドを作成し、Sleep(1)毎に波形生成が実行される。
+利点：
+1秒間に約500回(Win98)波形生成が実行されるので、SoundBufferSizeを限界まで小さくできる。
+GPUプラグインのFPS limit処理と干渉しにくいので、FPSが安定する。
+欠点：
+スレッド切り替え、Sleep(1)の処理を頻繁に行うので、負荷が大きい。
+Winでは、スレッド切り替えのタイムスライスは20ms(9x系?)～50ms(NT系?)らしいので、微妙に音ヨレが起こる。(FF9では顕著...聴いてて気持ち悪い)
+(500回波形生成が実行されるが、500回スレッドが切り替わっているわけではなく、単にスレッドが切り替わらないうちにSleep(1)が何回も実行されているにすぎないようである)
+
+2. Multimedia timer
+タイマー割り込みで波形生成が実行される。
+利点：
+インターバル間隔にもよるが、負荷が軽い。
+本体と同一スレッドなのでスレッド切り替えによるオーバーヘッドは無く、指定したインターバルでほぼ確実に割り込んでくれるので、音ヨレは起こらない。
+欠点：
+Pete's GPUのFPS limit処理と相性が悪いらしく、FPSが安定しなかったり、68FPSに設定しているのに66.5FPSぐらいで動いてしまう事がある。
+(これは、同じ仕組みであると思われるNull2's SPUでも起こる)
+現在のインターバルは10msだが、VPの音声を再生するには解像度が足りず、5ms程度にする必要がある。
+が、インターバルを小さくしすぎると、Another threadより処理が重くなってしまう。
+
+・Move vag position methodを追加した。
+1. Old
+従来のVAG移動処理。
+SPUファイルが正しく再生される以外の利点は無い。
+
+2. New
+現在調査・実装中のVAG移動処理。
+従来問題のあったガンパレ・ZANACxZANAC等、ほぼ正しく鳴るようになった。
+唯一、SPUファイルが正しく再生されなくなってしまうのがネック...
+(ループアドレスの復帰方法に問題があるようで、現在調査中)
+
+・SPU IRQ-Force interruption flag7を追加した。
+フラグ7のVAGブロックを通過した場合、SPU-IRQを強制的に発生させる。
+ただし、スタートアドレスがフラグ7の場合は発生しない。(TOD用の仕様)
+
+・不必要なオプションを削除した。
+XA buffer size...Enable XA buffer auto adjustをオン固定にした事により削除。
+High resolution mode...通常版ではオン、ライト版ではオフに固定。
+Enable XA buffer auto adjust...オン固定。
+Enable Reverb...通常版では薄チェック、ライト版ではオフに固定。
+Enable SPU IRQ...オン固定。
+Enable Noise and Pitch Modulation...通常版ではオン、ライト版ではオフに固定。
+Enable Compressor...機能削除。
+
+・VAGデコード処理を修正した。
+クリップ処理の追加...ゼノギアスの効果音が直った。
+処理の簡素化...多少速度アップ。(クリップ処理の追加で相殺されたが...)
+
+・リバーブを調整した。
+リバーブバッファの長さが、リバーブパラメータによって変化するようにした。
+調整には、TODのサウンドモードにあるREVERB TYPEを使用した。
+
+・ノイズを調整した。
+調整には、FF7とZANACxZANACを使用した。
+ただ、どうしても実機のような雰囲気のノイズが出せない。
+そもそも生成アルゴリズムが違うからだと思う。
+
+・速度アップのためのコマゴマとした修正。
+主要オブジェクトは、newせずstaticに。
+クリップ処理の改良。
+その他。
+
+--------------------------------------------------------------------------
+Eternal 1.1->Test8 (2001/11/22)
+
+・VAGポジション移動処理を修正した。
+フラグ7とフラグ8以上の扱いを再度変更。
+フラグ7：Startに設定されている場合素通りし、フラグ7のブロックを単発ループするようにした。
+フラグ8以上：移動先がフラグ8以上だった場合、Repeatに飛ぶようにした。
+
+・エンベロープテーブルを計算式化した。
+今のところ問題は無い模様。
+ディケイが正確に再現できたのではないか。
+
+・Lite版を入れた。
+通常版と比べて、軽いかわりに、
+「リバーブ無し・音色は補間無し・ノイズ,ピッチ無し・クロスフェード無し・音ヨレ・音欠け・FPS不安定」
+...である。
+
+--------------------------------------------------------------------------
+Test7->Eternal 1.1 beta (2001/11/05)
+
+・フラグ7強制SPU-IRQは、オプションから外して標準仕様とした。
+
+・「Update before readRegister」を修正した。
+3ステートにして、以下の動作をさせるようにした。
+チェック無し...レジスタアクセス時にDirectSoundバッファを更新しない
+チェックあり...レジスタ読み込み時にDirectSoundバッファを更新する
+薄いチェック...レジスタ読み込み・書き込み時にDirectSoundバッファを更新する
+
+それに伴い、名称を「Update before register access」に変更。
+
+このオプションは、特定ののソフトにおける不具合を解消するためのオプションです。
+
+オプションを「チェックあり」にする事で音欠けが解消できた個所：
+FF8...タイトルBGM(Demo)、飛空挺ラグナロクのテーマ(Hikutei)
+FF9...Disc3.飛空挺ヒルダガルデのテーマ
+クロノクロス...クロノクロスを使ってラスボスを倒した時のテーマ(BGM59番)
+ドラクエ7...エンディングBGM
+幻想水滸伝2...通常バトルBGM(シンバル連打)
+ほか
+
+薄いチェックにすると、いくつかのソフトにおいて発音時のプチノイズが軽減されました。
+
+ただしこのオプションは、ソフトやシーンによっては多大な負荷がかかることがあります。
+ご注意下さい。
+
+・ソース全体をさらに整理統合
+
+--------------------------------------------------------------------------
+Test6->Test7 (2001/11/03)
+
+・追加したオプションがレジストリに保存されていなかったので修正した。
+
+・特定のソフトで起きる音欠け現象を解消した。
+オプション追加。
+「Update before readRegister」
+レジスタ読み込みにて、SPUからレジスタを読む直前に、DirectSoundバッファを更新させます。
+これにより、SPUが最新の状態に更新されるので、より正確な値を取得する事ができます。(特にADSRボリューム)
+ちょっと環境依存しやすいかもしれません。
+(DirectSoundの再生ポジションが細かく移動していないと効果がありません)
+
+オプションを有効にする事で音欠けが解消できた個所：
+FF8...タイトルBGM(Demo)、飛空挺ラグナロクのテーマ(Hikutei)
+FF9...Disc3.飛空挺ヒルダガルデのテーマ
+クロノクロス...クロノクロスを使ってラスボスを倒した時のテーマ(BGM59番)
+ドラクエ7...エンディングBGM
+幻想水滸伝2...通常バトルBGM(シンバル連打)
+
+ただし、このオプションはソフトを選びます。
+SPUreadRegister()呼び出し時に無条件でtheAudioOut->updateBuffer()が走るので、
+頻繁にレジスタ読み込みが発生すると、かなりパフォーマンスが低下します。
+
+例：テイルズオブデスティニーのサウンドモード
+レベルメーターやスペクトラムアナライザーが、ASDRボリューム・ピッチに相当の頻度で
+アクセスしているため、ものすごい負荷が掛かりました。
+
+・フラグ1の波形生成中断処理がまずかったので修正した。
+問題点の確認・解消できた個所：
+コロニーウォーズ...効果音が鳴り続ける問題
+ステートロード・PSSファイル再生時に、鳴るはずの音が欠ける現象
+
+・エンベロープを調整した。
+ディケイの伸びを実機通りの長さに。(今までは実測値の15/16だった)
+内部構造・処理を少し軽量化。
+その他残り疑問点の確認。(現在の実装であっていた)
+
+・ソース全体を整理統合した。
+PSS出力機能・リバーブのクラス化。(FPSEでもPSSが出力できるようになった)
+SPU以降のクラスの外部依存性をなるべく減らした。
+その他いろいろ。
+
+--------------------------------------------------------------------------
+Eternal 1.0->Test6 (2001/10/30)
+
+・ステータスレジスタの「SPU-IRQオンオフ」フラグを実装した。
+Yanoさんの指摘通り未実装だったので、ステータスレジスタの中でこいつだけ先に実装。
+
+・SPU-IRQまわりの再設計。
+SPU-IRQ VP fixの実装用に、ゴチャゴチャしていたSPU-IRQまわりをすっきりさせた。
+
+・SPU-IRQ VP fix
+2つのオプションを付けた。
+
+「SPU IRQ-Wait CPU action」
+SPU-IRQが発生したら、波形生成を一時ストップして、本体がSPUに何かしら命令を発するまで待機します。
+本体が反応するか、約0.2秒待っても本体が何にも反応しなかったら、再開します。
+
+「SPU IRQ-force interruption Flag7」
+VAGブロックがフラグ7の時、強制的にSPU-IRQを発生させます。
+ただし、StartAddressがフラグ7だった場合は発生しません。
+
+--------------------------------------------------------------------------
+Test4->Test5 (2001/10/08)
+
+・Aboutをダイアログボックスに変更した。
+andyさんにデザインして頂いたリソースを表示するようにした。
+フォント等の関係でダイアログが縮んで、文字が切れている...
+
+・XAバッファサイズ自動調節機能を付けた。
+一応自動調節してくれてはいるみたいだが...
+ただ、極限までXAの発音遅延を短くする方法は、やはりWait for XA bufferをオンにしてXA buffer sizeを各XAフォーマット毎の限界値に設定するしかないんだよな...
+発音遅延にこだわらなければ、XA buffer sizeを50ぐらいに設定すれば良い話だし。
+
+・SPU-IRQの発生位置を修正した。
+Yanoさんの指摘どおり、フラグが7のVAGブロックにSPU-IRQアドレスが設定されていると、SPU-IRQが発生していなかった問題を解消した。
+
+・realtime config windowで落ちるバグを修正した。
+realtime config windowを表示させていて、いったんGUIに戻って復帰(or RESET)すると落ちるバグを直した。
+
+--------------------------------------------------------------------------
+Test3->Test4 (2001/09/28)
+
+・エクスポート関数にSPUrender()を追加した。
+とりあえずKbMediaPlayer用に付けてみたけど、他にも利用方法がありそう。
+本体がサウンド出力してくれれば、マルチスレッドにする必要が無いから軽くなるし。
+(本体がSPUrender()とそれ以外の関数を排他的に呼び出さないといけない条件付き)
+分解能も自由に決定できる。(1サンプルづつ生成させる事も可能)
+
+--------------------------------------------------------------------------
+Test2->Test3 (2001/09/26)
+
+・PSS出力機能を追加した。
+ステートセーブ機能があったおかげで最小限の改造で実現できた。
+プラグイン間の互換性もまあまあである。
+

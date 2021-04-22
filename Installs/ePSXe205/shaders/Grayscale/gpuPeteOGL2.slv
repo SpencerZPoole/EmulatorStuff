@@ -1,0 +1,11 @@
+/*
+ *
+ */
+
+varying vec2 textureCoords;
+
+void main()
+{
+	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+	textureCoords = gl_MultiTexCoord0.xy;
+}

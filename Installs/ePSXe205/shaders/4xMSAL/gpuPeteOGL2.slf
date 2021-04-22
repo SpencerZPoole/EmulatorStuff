@@ -1,0 +1,73 @@
+/*
+ * 4xMSAL shader
+ * 
+ * Copyright (C) 2007 guest(r) - guest.r@gmail.com
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+uniform sampler2D OGL2Texture;
+
+void main()
+{
+	vec2 dx = vec2(1.0/4096.0,0.0);
+	vec2 dy = vec2(0.0,1.0/2048.0);
+	vec3 dt = vec3(1.0,1.0,1.0);
+
+	vec3 c00, c02, c20, c22, u, d, r, l;
+	float m1, m2;
+
+	c00 = texture2D(OGL2Texture, gl_TexCoord[1].xy-dy).xyz; 
+	c20 = texture2D(OGL2Texture, gl_TexCoord[2].xy-dy).xyz; 
+	c02 = texture2D(OGL2Texture, gl_TexCoord[4].xy-dy).xyz; 
+	c22 = texture2D(OGL2Texture, gl_TexCoord[3].xy-dy).xyz; 
+
+	m1 = dot(abs(c00-c22),dt)+0.001;
+	m2 = dot(abs(c02-c20),dt)+0.001;
+
+	u = .5*(m2*(c00+c22)+m1*(c02+c20))/(m1+m2);
+
+	c00 = texture2D(OGL2Texture, gl_TexCoord[1].xy+dy).xyz; 
+	c20 = texture2D(OGL2Texture, gl_TexCoord[2].xy+dy).xyz; 
+	c02 = texture2D(OGL2Texture, gl_TexCoord[4].xy+dy).xyz; 
+	c22 = texture2D(OGL2Texture, gl_TexCoord[3].xy+dy).xyz; 
+	
+	m1 = dot(abs(c00-c22),dt)+0.001;
+	m2 = dot(abs(c02-c20),dt)+0.001;
+
+	d = .5*(m2*(c00+c22)+m1*(c02+c20))/(m1+m2);
+
+	c00 = texture2D(OGL2Texture, gl_TexCoord[1].xy-dx).xyz; 
+	c20 = texture2D(OGL2Texture, gl_TexCoord[2].xy-dx).xyz; 
+	c02 = texture2D(OGL2Texture, gl_TexCoord[4].xy-dx).xyz; 
+	c22 = texture2D(OGL2Texture, gl_TexCoord[3].xy-dx).xyz; 
+
+	m1 = dot(abs(c00-c22),dt)+0.001;
+	m2 = dot(abs(c02-c20),dt)+0.001;
+
+	l = .5*(m2*(c00+c22)+m1*(c02+c20))/(m1+m2);
+
+	c00 = texture2D(OGL2Texture, gl_TexCoord[1].xy+dx).xyz; 
+	c20 = texture2D(OGL2Texture, gl_TexCoord[2].xy+dx).xyz; 
+	c02 = texture2D(OGL2Texture, gl_TexCoord[4].xy+dx).xyz; 
+	c22 = texture2D(OGL2Texture, gl_TexCoord[3].xy+dx).xyz; 
+
+	m1 = dot(abs(c00-c22),dt)+0.001;
+	m2 = dot(abs(c02-c20),dt)+0.001;
+
+	r = .5*(m2*(c00+c22)+m1*(c02+c20))/(m1+m2);
+
+	gl_FragColor.xyz = 0.25*(u+d+r+l);
+}
