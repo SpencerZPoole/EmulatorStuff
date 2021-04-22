@@ -4,9 +4,9 @@
       
       These were originally used for integrating my ROMs and ISOs into my Steam Library.
       
-            Steam ROM/ISO/ Shortcut Tutorial: [https://steamcommunity.com/sharedfiles/filedetails/?id=615016180]
-            SteamGrid Art Community Database: [https://www.steamgriddb.com/
-                                               https://www.steamgriddb.com/profile/76561197997377302]
+            [Steam ROM/ISO/ Shortcut Tutorial:](https://steamcommunity.com/sharedfiles/filedetails/?id=615016180)
+            [SteamGrid Art Community Database:](https://www.steamgriddb.com/)
+                                         [myprofile](https://www.steamgriddb.com/profile/76561197997377302)
 
 
 - My Installations (all set up, the ones that I use and run) of my emulators
