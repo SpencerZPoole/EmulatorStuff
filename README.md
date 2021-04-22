@@ -2,11 +2,11 @@
 
       Logos, Heros, Posters, and Banners directories
       
-      These were originally used for my integrating my ROMs and ISOs into my Steam Library.
+      These were originally used for integrating my ROMs and ISOs into my Steam Library.
       
-            Steam ROM/ISO/ Shortcut Tutorial: https://steamcommunity.com/sharedfiles/filedetails/?id=615016180
-            SteamGrid Art Community Database: https://www.steamgriddb.com/
-                                        https://www.steamgriddb.com/profile/76561197997377302
+            Steam ROM/ISO/ Shortcut Tutorial: [https://steamcommunity.com/sharedfiles/filedetails/?id=615016180]
+            SteamGrid Art Community Database: [https://www.steamgriddb.com/
+                                               https://www.steamgriddb.com/profile/76561197997377302]
 
 
 - My Installations (all set up, the ones that I use and run) of my emulators
