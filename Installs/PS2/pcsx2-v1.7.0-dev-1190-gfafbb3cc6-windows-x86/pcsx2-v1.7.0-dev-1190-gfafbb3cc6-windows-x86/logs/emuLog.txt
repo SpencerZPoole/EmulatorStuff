@@ -6,7 +6,7 @@ Host Machine Init:
 	Physical RAM     =  16343 MB
 	CPU name         =  Intel(R) Core(TM) i5-3570K CPU @ 3.40GHz
 	Vendor/Model     =  GenuineIntel (stepping 09)
-	CPU speed        =  3.404 ghz (4 logical threads)
+	CPU speed        =  3.403 ghz (4 logical threads)
 	x86PType         =  Standard OEM
 	x86Flags         =  bfcbfbff fe9ae383
 	x86EFlags        =  28100800
@@ -26,18 +26,19 @@ Initializing plugins...
 	Init GS
 Plugins initialized successfully.
 
-[GameDB] 10363 games on record (loaded in 415ms)
 Patches: No CRC found, using 00000000 instead.
-isoFile open ok: E:\Emulators Folder\EmulatorGames\PS2Games\SSX On Tour (USA).iso
+[GameDB] 10363 games on record (loaded in 674ms)
+isoFile open ok: E:\Emulators Folder\EmulatorGames\PS2Games\Rogue Galaxy (USA).iso
 	Image type  = DVD
- * CDVD Disk Open: DVD, Single layer or unknown:
- * * Track 1: Data (Mode 1) (2294112 sectors)
+isoFile: second layer found at sector 0x00192070
+ * CDVD Disk Open: DVD, Double layer:
+ * * Track 1: Data (Mode 1) (3402208 sectors)
 Opening plugins...
 	Opening GS
 Failed to init the freetype face
 Current Renderer: Direct3D 11 (Hardware renderer)
-GSdx Lookup CRC:0
 McdSlot 0 [File]: E:\Emulators Folder\Installs\PS2\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\memcards\Mcd001.ps2
+GSdx Lookup CRC:0
 McdSlot 1 [File]: E:\Emulators Folder\Installs\PS2\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\memcards\Mcd002.ps2
 Plugins opened successfully.
 48000 SampleRate: 
@@ -73,12 +74,13 @@ PlayStation 2 ======== Hard reset boot
 EE DECI2 Manager version 0.06 Feb  6 2003 08:38:48
   CPUID=2e20, BoardID=0, ROMGEN=2004-0614, 32M
 
-(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
-(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SCUS_974.90;1
+(SYSTEM.CNF) Software version = 1.01
 (SYSTEM.CNF) Disc region type = NTSC
-ELF (cdrom0:\SLUS_212.78;1) Game CRC = 0x0F27ED9B, EntryPoint = 0x00100008
-(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
-(SYSTEM.CNF) Software version = 1.00
+found 0 symbols
+ELF (cdrom0:\SCUS_974.90;1) Game CRC = 0x0643F90C, EntryPoint = 0x00100008
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SCUS_974.90;1
+(SYSTEM.CNF) Software version = 1.01
 (SYSTEM.CNF) Disc region type = NTSC
 
 IOP Realtime Kernel Ver.0.9.1
@@ -185,11 +187,11 @@ open fd = -6
 (UpdateVSyncRate) FPS Limit Changed : 59.93 fps
 Frame buffer size set to  640x512 (1920x1536)
 ExecutePs2GameDisk
-(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
-(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SCUS_974.90;1
+(SYSTEM.CNF) Software version = 1.01
 (SYSTEM.CNF) Disc region type = NTSC
-(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
-(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SCUS_974.90;1
+(SYSTEM.CNF) Software version = 1.01
 (SYSTEM.CNF) Disc region type = NTSC
 open name cdrom0:¥SYSTEM.CNF;1 flag 4 data 4a978
 open fd = 2
@@ -208,11 +210,11 @@ open fd = 2
 # Initialize User Memory ...
 # Initialize Scratch Pad ...
 # Restart Done.
-(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
-(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SCUS_974.90;1
+(SYSTEM.CNF) Software version = 1.01
 (SYSTEM.CNF) Disc region type = NTSC
-(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
-(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SCUS_974.90;1
+(SYSTEM.CNF) Software version = 1.01
 (SYSTEM.CNF) Disc region type = NTSC
 Get Reboot Request From EE
 ROM directory not found
@@ -289,11 +291,11 @@ _spu_rev_offsetaddr 1f9021
 # Initialize User Memory ...
 # Initialize Scratch Pad ...
 # Restart Done.
-(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
-(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SCUS_974.90;1
+(SYSTEM.CNF) Software version = 1.01
 (SYSTEM.CNF) Disc region type = NTSC
-(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
-(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SCUS_974.90;1
+(SYSTEM.CNF) Software version = 1.01
 (SYSTEM.CNF) Disc region type = NTSC
 Get Reboot Request From EE
 ROM directory not found
@@ -310,14 +312,14 @@ cdvd driver module version 0.1.1 (C)SCEI
 Load File service.(99/11/05)
 Multi Threaded Fileio module.(99/11/15) 
 iop heap service (99/11/03)
-loadelf: fname cdrom0:¥SLUS_212.78;1 secname all
+loadelf: fname cdrom0:¥SCUS_974.90;1 secname all
 loadelf version 3.30
-(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SLUS_212.78;1
-(SYSTEM.CNF) Software version = 1.00
+(SYSTEM.CNF) Detected PS2 Disc = cdrom0:\SCUS_974.90;1
+(SYSTEM.CNF) Software version = 1.01
 (SYSTEM.CNF) Disc region type = NTSC
-Input ELF format filename = cdrom0:¥SLUS_212.78;1
-0 00100000 00432f94 ....................................................................
-Loaded, cdrom0:¥SLUS_212.78;1
+Input ELF format filename = cdrom0:¥SCUS_974.90;1
+0 00100000 00381080 .........................................................
+Loaded, cdrom0:¥SCUS_974.90;1
 start address 0x100008
 gp address 00000000
 # Restart Without Memory Clear.
@@ -335,18 +337,22 @@ gp address 00000000
 # Initialize Scratch Pad ...
 # Restart Without Memory Clear Done.
 Elf entry point @ 0x00100008 about to get recompiled. Load patches first.
-[GameDB] Searching for 'slus-21278' in GameDB
-[GameDB] Found 'slus-21278' in GameDB
-[GameDB] Searching for patch with CRC '0f27ed9b'
-[GameDB] No CRC-specific patch or default patch found
+[GameDB] Searching for 'scus-97490' in GameDB
+[GameDB] Found 'scus-97490' in GameDB
+[GameDB] Searching for patch with CRC '0643f90c'
+[GameDB] Found patch with CRC '0643f90c'
+Author: kozarovv
+(GameDB) Patches Loaded: 1
 Overall 0 Widescreen hacks loaded
-(Wide Screen Cheats DB) Patches Loaded: 0
-[GameDB] Searching for 'slus-21278' in GameDB
-[GameDB] Found 'slus-21278' in GameDB
-[GameDB] Searching for patch with CRC '0f27ed9b'
-[GameDB] No CRC-specific patch or default patch found
-GSdx Lookup CRC:F27ED9B
+Loading patch '0643F90C.pnach' from archive 'E:\Emulators Folder\Installs\PS2\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\pcsx2-v1.7.0-dev-1190-gfafbb3cc6-windows-x86\cheats_ws.zip'
+comment: Widescreen hack by nemesis2000 (pnach by nemesis2000)
+(Wide Screen Cheats DB) Patches Loaded: 5
+[GameDB] Searching for 'scus-97490' in GameDB
+[GameDB] Found 'scus-97490' in GameDB
+[GameDB] Searching for patch with CRC '0643f90c'
+[GameDB] Found patch with CRC '0643f90c'
 Get Reboot Request From EE
+GSdx Lookup CRC:643F90C
 ROM directory not found
 
 PlayStation 2 ======== Update rebooting..
@@ -361,6 +367,46 @@ cdvd driver module version 0.1.1 (C)SCEI
 Load File service.(99/11/05)
 Multi Threaded Fileio module.(99/11/15) 
 iop heap service (99/11/03)
+loadmodule: fname cdrom0:¥MODULES¥SIO2MAN.IRX;1 args 0 arg 
+loadmodule: id 25, ret 0
+loadmodule: fname cdrom0:¥MODULES¥PADMAN.IRX;1 args 0 arg 
+loadmodule: id 26, ret 0
+loadmodule: fname cdrom0:¥MODULES¥MCMAN.IRX;1 args 0 arg 
+loadmodule: id 27, ret 2
+loadmodule: fname cdrom0:¥MODULES¥MCSERV.IRX;1 args 0 arg 
+loadmodule: id 28, ret 2
+loadmodule: fname cdrom0:¥MODULES¥LIBSD.IRX;1 args 0 arg 
+loadmodule: id 29, ret 0
+loadmodule: fname cdrom0:¥MODULES¥SDRDRV.IRX;1 args 0 arg 
+SDR driver version 4.0.1 (C) SCEI
+ Exit rsd_main 
+loadmodule: id 30, ret 2
+loadmodule: fname cdrom0:¥MODULES¥MODHSYN.IRX;1 args 0 arg 
+loadmodule: id 31, ret 0
+loadmodule: fname cdrom0:¥MODULES¥MODMIDI.IRX;1 args 0 arg 
+loadmodule: id 32, ret 0
+loadmodule: fname cdrom0:¥MODULES¥MODMSIN.IRX;1 args 0 arg 
+loadmodule: id 33, ret 0
+loadmodule: fname cdrom0:¥MODULES¥CDVDSTM.IRX;1 args 0 arg 
+loadmodule: id 34, ret 2
+loadmodule: fname cdrom0:¥MODULES¥SKSOUND.IRX;1 args 12 arg maxtrack=16
+loadmodule: id 35, ret 0
+loadmodule: fname cdrom0:¥MODULES¥SKHSYNTH.IRX;1 args 12 arg maxentry=16
+loadmodule: id 36, ret 0
+loadmodule: fname cdrom0:¥MODULES¥SKMIDI.IRX;1 args 22 arg maxtrack=5
+loadmodule: id 37, ret 0
+loadmodule: fname cdrom0:¥MODULES¥SKMSIN.IRX;1 args 22 arg maxtrack=9
+loadmodule: id 38, ret 0
+loadmodule: fname cdrom0:¥MODULES¥PCMPLAY.IRX;1 args 0 arg 
+pcm player version 1.2.1
+ pcm play loader thread 
+goto pplayer cmd loop
+loadmodule: id 39, ret 0
+SDR callback thread created
+pcm allocate = 20480
+start pcm thread
+Unknown device 'host'
+Known devices are  cdrom_stm:(CD-ROM_STM )  mc:(Memory Card)  cdrom:(CD-ROM )  rom:(ROM/Flash)  tty:(CONSOLE) 
 Closing plugins...
 	Closing GS
 Plugins closed successfully.
